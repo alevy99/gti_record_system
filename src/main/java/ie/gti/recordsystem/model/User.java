@@ -67,4 +67,8 @@ public class User {
         return roles.stream().anyMatch (role -> Role.RoleType.STUDENT.name.equalsIgnoreCase(role.getName()));
     }
 
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Username: " + username;
+    }
 }

@@ -9,16 +9,26 @@ import ie.gti.recordsystem.model.Role;
 import ie.gti.recordsystem.model.User;
 import ie.gti.recordsystem.service.UserService;
 import ie.gti.recordsystem.ui.AbstractForm;
+import ie.gti.recordsystem.ui.comp.JGtiTable;
+import ie.gti.recordsystem.ui.comp.PaddedCellRenderer;
+import ie.gti.recordsystem.ui.comp.PaddedJTable;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 //import java.awt.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -44,6 +54,8 @@ public class UserFrame extends AbstractForm {
     private MainFrame mainFrame;
 
     private boolean isInserting = false;
+
+    private Set<Integer> rowsInserting = new HashSet<>();
     
     /**
      * Creates new form PersonFrame
@@ -56,26 +68,51 @@ public class UserFrame extends AbstractForm {
 
     @Override
     protected void initForm() {
+//        final int CELL_PAD = 5;
+
         super.initForm();
 
 //        jUserTable.setCellSelectionEnabled(false);
 //        jUserTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-//        TableColumnModel columnModel = jUserTable.getColumnModel();
-//        columnModel.getColumn(0).setPreferredWidth(20);
-//        columnModel.getColumn(1).setPreferredWidth(100);
-//        columnModel.getColumn(2).setPreferredWidth(100);
-//        columnModel.getColumn(3).setPreferredWidth(30);
-//        columnModel.getColumn(4).setPreferredWidth(30);
-//        columnModel.getColumn(5).setPreferredWidth(30);
-//        columnModel.getColumn(6).setPreferredWidth(40);
+        TableColumnModel columnModel = jUserTable.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(20);
+        columnModel.getColumn(1).setPreferredWidth(100);
+        columnModel.getColumn(2).setPreferredWidth(100);
+        columnModel.getColumn(3).setPreferredWidth(30);
+        columnModel.getColumn(4).setPreferredWidth(30);
+        columnModel.getColumn(5).setPreferredWidth(30);
+        columnModel.getColumn(6).setPreferredWidth(40);
 
-        // Add sorter to the table
+        // Add selection listener
+        jUserTable.getSelectionModel().addListSelectionListener(this::updateUI);
+
+//        // Add padding to cells
+//        PaddedCellRenderer paddedCellRenderer = new PaddedCellRenderer(CELL_PAD);
+//
+//        // Apply to all text columns
+//        for (int i = 0; i < IS_STUDENT_COLUMN; i++) {
+//            jUserTable.getColumnModel().getColumn(i).setCellRenderer(paddedCellRenderer);
+//        }
+//
+//        // Set cell editor with paddings
+//        JTextField textField = new JTextField();
+//        textField.setBorder(new EmptyBorder(0, CELL_PAD, 0, CELL_PAD)); // Apply padding inside the editor
+//
+//        DefaultCellEditor cellEditor = new DefaultCellEditor(textField);
+//        jUserTable.setDefaultEditor(Object.class, cellEditor); // Apply to all cells
+//
+//        // Add sorter to the table
 //        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(jUserTable.getModel());
 //        jUserTable.setRowSorter(sorter);
 
 //        jUserTable.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
 //        jUserTable.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor(new JCheckBox()));
+    }
+
+    private void updateUI(ListSelectionEvent listSelectionEvent) {
+        jUpdateBtn.setEnabled(jUserTable.getSelectedRowCount() > 0);
+        jDeleteBtn.setEnabled(jUserTable.getSelectedRowCount() > 0);
     }
 
     protected void onFormHidden() {
@@ -86,7 +123,8 @@ public class UserFrame extends AbstractForm {
 
     protected void onFormShown() {
         super.onFormShown();
-        initTableData();
+        reloadTableData();
+        updateUI(null);
     }
 
     /**
@@ -100,13 +138,17 @@ public class UserFrame extends AbstractForm {
         jPanel1 = new javax.swing.JPanel();
         jPasswordField1 = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jUserTable = new javax.swing.JTable();
+        jUserTable = new PaddedJTable();
         jCloseBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jAddPanel = new javax.swing.JPanel();
+        jAddBtn = new javax.swing.JButton();
+        jAddCancelBtn = new javax.swing.JButton();
+        jAddSaveBtn = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
         jUpdateBtn = new javax.swing.JButton();
         jRevertBtn = new javax.swing.JButton();
         jDeleteBtn = new javax.swing.JButton();
-        jAddBtn = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -143,20 +185,13 @@ public class UserFrame extends AbstractForm {
             Class[] types = new Class [] {
                 java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Object.class
             };
-            boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true
-            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
         });
-        jUserTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jUserTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jUserTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        jUserTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         jScrollPane1.setViewportView(jUserTable);
 
         jCloseBtn.setText("Close");
@@ -168,6 +203,55 @@ public class UserFrame extends AbstractForm {
 
         jLabel1.setText("USERS");
 
+        jAddPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jAddBtn.setText("Add new user");
+        jAddBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jAddBtnActionPerformed(evt);
+            }
+        });
+
+        jAddCancelBtn.setText("Cancel");
+        jAddCancelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jAddCancelBtnActionPerformed(evt);
+            }
+        });
+
+        jAddSaveBtn.setText("Save new user(s)");
+        jAddSaveBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jAddSaveBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jAddPanelLayout = new javax.swing.GroupLayout(jAddPanel);
+        jAddPanel.setLayout(jAddPanelLayout);
+        jAddPanelLayout.setHorizontalGroup(
+            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jAddPanelLayout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
+                .addGroup(jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jAddSaveBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                    .addComponent(jAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jAddCancelBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+        jAddPanelLayout.setVerticalGroup(
+            jAddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jAddPanelLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jAddBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jAddSaveBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jAddCancelBtn)
+                .addGap(15, 15, 15))
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         jUpdateBtn.setText("Update selected");
         jUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -175,7 +259,7 @@ public class UserFrame extends AbstractForm {
             }
         });
 
-        jRevertBtn.setText("Revert changes");
+        jRevertBtn.setText("Reload users");
         jRevertBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRevertBtnActionPerformed(evt);
@@ -189,53 +273,67 @@ public class UserFrame extends AbstractForm {
             }
         });
 
-        jAddBtn.setText("Add new user");
-        jAddBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jAddBtnActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jUpdateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                    .addComponent(jDeleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jRevertBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addComponent(jUpdateBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jDeleteBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(jRevertBtn)
+                .addGap(17, 17, 17))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(283, 283, 283))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 687, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jCloseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 711, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jUpdateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-                            .addComponent(jAddBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jRevertBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(124, 124, 124)
-                        .addComponent(jDeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jCloseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jAddPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(45, 45, 45)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(76, 76, 76))))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(297, 297, 297)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addComponent(jAddBtn)
-                .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jUpdateBtn)
-                    .addComponent(jRevertBtn)
-                    .addComponent(jDeleteBtn))
                 .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jAddPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(jCloseBtn)
                 .addGap(15, 15, 15))
         );
@@ -248,11 +346,11 @@ public class UserFrame extends AbstractForm {
     }//GEN-LAST:event_formWindowClosed
     
     private void setTableSelection(boolean isEnabled) {
-//        jUserTable.setRowSelectionAllowed(isEnabled);
-//        jUserTable.setColumnSelectionAllowed(isEnabled);
+        jUserTable.setRowSelectionAllowed(isEnabled);
+        jUserTable.setColumnSelectionAllowed(isEnabled);
     }
 
-    private void initTableData() {
+    private void reloadTableData() {
         stopInserting();
         if (jUserTable.getModel() instanceof DefaultTableModel model) {
             // Clear table
@@ -268,7 +366,7 @@ public class UserFrame extends AbstractForm {
         } else {
             throw new RuntimeException("Unknown table model");
         }
-        setTableSelection(true);
+//        setTableSelection(true);
     }
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -276,7 +374,7 @@ public class UserFrame extends AbstractForm {
     }//GEN-LAST:event_formWindowOpened
 
     private void jRevertBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRevertBtnActionPerformed
-        initTableData();
+        reloadTableData();
     }//GEN-LAST:event_jRevertBtnActionPerformed
 
     private void jCloseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCloseBtnActionPerformed
@@ -285,59 +383,45 @@ public class UserFrame extends AbstractForm {
     }//GEN-LAST:event_jCloseBtnActionPerformed
 
     private void jDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeleteBtnActionPerformed
-        List<Long> ids = new ArrayList<>();
+        if (! confirmBatchTableAction("Confirm delete", "Are you sure want to delete users:")) return;
+
         Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
-            ids.add((Long) jUserTable.getModel().getValueAt(row, 0));
+            userService.deleteUser((Long) jUserTable.getModel().getValueAt(row, 0));
+//            ((DefaultTableModel) jUserTable.getModel()).removeRow(row);
+//            ids.add((Long) jUserTable.getModel().getValueAt(row, 0));
         });
-        userDao.deleteUsersById(ids);
-        initTableData();
+//        userDao.deleteUsersById(ids);
+        reloadTableData();
     }//GEN-LAST:event_jDeleteBtnActionPerformed
+
+    private boolean confirmBatchTableAction(String title, String message) {
+        if (jUserTable.getSelectedRows().length == 0) {
+            return false;
+        }
+        return JOptionPane.showConfirmDialog(this,
+                message + "\n" +
+                        Arrays.stream(jUserTable.getSelectedRows()).
+                                mapToObj(row -> jUserTable.getModel().getValueAt(row, USERNAME_COLUMN).toString()).
+                                collect(Collectors.joining(", ")),
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
+    }
 
     private void jAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddBtnActionPerformed
         DefaultTableModel model = (DefaultTableModel) jUserTable.getModel();
-//        setTableSelection(false);
-//        model.
-        model.addRow(new Object[]{0L, "", "", false, false, false, null});
-        jUserTable.setRowSelectionInterval(jUserTable.getRowCount() - 1, jUserTable.getRowCount() - 1);
+
+        model.addRow(new Object[]{0L, "", "", false, false, false, "Delete"});
+        int newRow = jUserTable.getRowCount() - 1;
+        jUserTable.setRowSelectionInterval(newRow, newRow);
         startInserting();
     }//GEN-LAST:event_jAddBtnActionPerformed
 
     private void jUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUpdateBtnActionPerformed
-        if (jUserTable.getSelectedRows().length == 0) {
-            return;
-        }
+        if (! confirmBatchTableAction("Confirm update", "Are you sure want to update users:")) return;
+
         if (isInserting) {
-            Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
-                User newUser = new User();
-                newUser.setUsername(jUserTable.getValueAt(row, USERNAME_COLUMN).toString());
-                newUser.setPassword(jUserTable.getValueAt(row, PASSWORD_COLUMN).toString());
 
-                if ((Boolean) jUserTable.getValueAt(row, IS_STUDENT_COLUMN)) {
-                    Role role = new Role();
-                    role.setId(Role.RoleType.STUDENT.id);
-                    role.setName(Role.RoleType.STUDENT.name);
-                    newUser.getRoles().add(role);
-                }
-
-                if ((Boolean) jUserTable.getValueAt(row, IS_TEACHER_COLUMN)) {
-                    Role role = new Role();
-                    role.setId(Role.RoleType.TEACHER.id);
-                    role.setName(Role.RoleType.TEACHER.name);
-                    newUser.getRoles().add(role);
-                }
-
-                if ((Boolean) jUserTable.getValueAt(row, IS_ADMIN_COLUMN)) {
-                    Role role = new Role();
-                    role.setId(Role.RoleType.ADMIN.id);
-                    role.setName(Role.RoleType.ADMIN.name);
-                    newUser.getRoles().add(role);
-                }
-
-
-                long newId = userService.insertUser(newUser);
-                jUserTable.setValueAt(newId, row, 0);
-            });
-            stopInserting();
         } else {
             Arrays.stream(jUserTable.getSelectedRows()).forEach(row -> {
                 User user = new User();
@@ -345,6 +429,9 @@ public class UserFrame extends AbstractForm {
                 user.setUsername(jUserTable.getValueAt(row, 1).toString());
                 user.setPassword(jUserTable.getValueAt(row, 2).toString());
 
+                fillUserRoles(row, user);
+
+                userService.updateUser(user);
 //                newUser.setUsername(jUserTable.getValueAt(row, 1).toString());
 //                newUser.setPassword(jUserTable.getValueAt(row, 2).toString());
 //                long newId = userService.updateUser(newUser);
@@ -352,17 +439,66 @@ public class UserFrame extends AbstractForm {
         }
     }//GEN-LAST:event_jUpdateBtnActionPerformed
 
+    private void jAddCancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddCancelBtnActionPerformed
+        stopInserting();
+        // Delete last row
+        ((DefaultTableModel) jUserTable.getModel()).removeRow(jUserTable.getRowCount() - 1);
+    }//GEN-LAST:event_jAddCancelBtnActionPerformed
+
+    private void jAddSaveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAddSaveBtnActionPerformed
+        rowsInserting.forEach(row -> {
+            User newUser = new User();
+            newUser.setUsername(jUserTable.getValueAt(row, USERNAME_COLUMN).toString());
+            newUser.setPassword(jUserTable.getValueAt(row, PASSWORD_COLUMN).toString());
+
+            fillUserRoles(row, newUser);
+
+            long newId = userService.insertUser(newUser);
+            jUserTable.setValueAt(newId, row, 0);
+        });
+        stopInserting();
+    }//GEN-LAST:event_jAddSaveBtnActionPerformed
+
+    private void fillUserRoles(int row, User user) {
+        if ((Boolean) jUserTable.getValueAt(row, IS_STUDENT_COLUMN)) {
+            user.getRoles().add(Role.RoleType.STUDENT.asRole());
+        }
+
+        if ((Boolean) jUserTable.getValueAt(row, IS_TEACHER_COLUMN)) {
+            user.getRoles().add(Role.RoleType.TEACHER.asRole());
+        }
+
+        if ((Boolean) jUserTable.getValueAt(row, IS_ADMIN_COLUMN)) {
+            user.getRoles().add(Role.RoleType.ADMIN.asRole());
+        }
+    }
+
 
     private void startInserting() {
+        rowsInserting.add(jUserTable.getRowCount() - 1);
         isInserting = true;
         // disable all the other buttons
-        jAddBtn.setEnabled(false);
+//        jAddBtn.setEnabled(false);
+        jAddCancelBtn.setEnabled(true);
+        jAddSaveBtn.setEnabled(true);
+
+        jUpdateBtn.setEnabled(false);
+        jDeleteBtn.setEnabled(false);
+//        setTableSelection(false);
     }
 
     private void stopInserting() {
         isInserting = false;
         // enable all the buttons etc
-        jAddBtn.setEnabled(true);
+//        jAddBtn.setEnabled(true);
+        jAddCancelBtn.setEnabled(false);
+        jAddSaveBtn.setEnabled(false);
+
+        jUpdateBtn.setEnabled(true);
+        jDeleteBtn.setEnabled(true);
+
+        rowsInserting.clear();
+//        setTableSelection(true);
     }
 
     /**
@@ -403,10 +539,14 @@ public class UserFrame extends AbstractForm {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jAddBtn;
+    private javax.swing.JButton jAddCancelBtn;
+    private javax.swing.JPanel jAddPanel;
+    private javax.swing.JButton jAddSaveBtn;
     private javax.swing.JButton jCloseBtn;
     private javax.swing.JButton jDeleteBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JButton jRevertBtn;
     private javax.swing.JScrollPane jScrollPane1;

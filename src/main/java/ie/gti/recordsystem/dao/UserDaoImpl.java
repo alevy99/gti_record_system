@@ -29,22 +29,46 @@ public class UserDaoImpl implements UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public Optional<User> getUserById(int id) {
-        final String SQL_GET_USER_BY_ID = "SELECT * FROM user WHERE id = ?";
-        List<User> users = jdbcTemplate.query(SQL_GET_USER_BY_ID, new UserMapper(), id);
 
-        return users.stream().findAny();
+//    private
+
+    @Override
+    public Optional<User> getUserById(long id) {
+        final String SQL_GET_USER_BY_ID =
+                """
+                        SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
+                        FROM user u
+                        LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
+                        LEFT OUTER JOIN role r ON r.id = ur.role_id
+                        WHERE u.id=?""";
+        return Optional.ofNullable(jdbcTemplate.query(SQL_GET_USER_BY_ID, new ResultSetExtractor<User>() {
+
+            @Override
+            public User extractData(ResultSet rs) throws SQLException, DataAccessException {
+                User user = null;
+                int row = 0;
+                while (rs.next()) {
+                    if (user == null) {
+                        user = userMapper.mapRow(rs, row);
+                    }
+                    assert user != null;
+                    user.getRoles().add(roleMapper.mapRow(rs, row));
+                    row++;
+                }
+                return user;
+            }
+        }, id));
     }
 
     @Override
     public Optional<User> getUserByUsername(String username) {
         final String SQL_GET_USER_BY_NAME =
-                "SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name\n" +
-                "FROM user u\n" +
-                "LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id \n" +
-                "LEFT OUTER JOIN role r ON r.id = ur.role_id\n" +
-                "WHERE u.username=?";
+                """
+                        SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
+                        FROM user u
+                        LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
+                        LEFT OUTER JOIN role r ON r.id = ur.role_id
+                        WHERE u.username=?""";
         return Optional.ofNullable(jdbcTemplate.query(SQL_GET_USER_BY_NAME, new ResultSetExtractor<User>() {
 
             @Override
@@ -67,10 +91,11 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         final String SQL_GET_USER_BY_NAME =
-                "SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name\n" +
-                        "FROM user u\n" +
-                        "LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id \n" +
-                        "LEFT OUTER JOIN role r ON r.id = ur.role_id";
+                """
+                        SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name
+                        FROM user u
+                        LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id\s
+                        LEFT OUTER JOIN role r ON r.id = ur.role_id""";
         return jdbcTemplate.query(SQL_GET_USER_BY_NAME, new ResultSetExtractor<List<User>>() {
 
             @Override
@@ -132,6 +157,12 @@ public class UserDaoImpl implements UserDao {
                 ps.setLong(1, id);
             }
         });
+    }
+
+    @Override
+    public void updateUser(User user) {
+        final String UPDATE_USER_SQL = "UPDATE user SET username = ?, password = ? WHERE id = ?";
+        jdbcTemplate.update(UPDATE_USER_SQL, user.getUsername(), user.getPassword(), user.getId());
     }
 
 }

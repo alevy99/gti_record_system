@@ -8,4 +8,8 @@ public interface UserService {
 
     long insertUser(User user);
 
+    void updateUser(User user);
+
+    void deleteUser(long id);
+
 }

@@ -22,11 +22,6 @@ public class ApplicationConfig {
 //    @Autowired
 //    Environment environment;
 
-//    private final String URL_PROP = "url";
-//    private final String USER_PROP = "dbuser";
-//    private final String DRIVER_PROP = "driver";
-//    private final String PASSWORD_PROP = "dbpassword";
-
     @Value("${url}")
     private String dbUrl;
 
