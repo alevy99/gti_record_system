@@ -29,7 +29,6 @@ public class LoginFrame extends AbstractForm {
     @Autowired
     private UserDao userDao;
 
-
     public LoginFrame(/*UserDao userDao, MainFrame mainFrame*/) {
         super();
         setLocationRelativeTo(this);

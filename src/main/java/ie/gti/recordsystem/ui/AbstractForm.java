@@ -1,12 +1,18 @@
 package ie.gti.recordsystem.ui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 
 public abstract class AbstractForm extends JFrame {
 
+    private final Logger logger = LoggerFactory.getLogger(AbstractForm.class);
+
     private boolean isShownOnce = false;
 
     protected abstract int getDefaultCloseOperationValue();
+
 
     public AbstractForm() {
         super();
@@ -37,13 +43,13 @@ public abstract class AbstractForm extends JFrame {
     }
 
     protected void onFormHidden() {
-        System.out.println(this.getClass().getSimpleName() + " WINDOW IS HIDDEN");
+        logger.debug("{} WINDOW IS HIDDEN", this.getClass().getSimpleName());
         //mainFrame.setVisible(true);
     }
 
 
     protected void onFormShown() {
-        System.out.println(this.getClass().getSimpleName() + " WINDOW IS VISIBLE");
+        logger.debug("{} WINDOW IS VISIBLE", this.getClass().getSimpleName());
 //        initTableData();
     }
 
