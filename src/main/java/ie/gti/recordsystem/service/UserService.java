@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService {
 
-    void insertUser(User user);
+    long insertUser(User user);
 
 }

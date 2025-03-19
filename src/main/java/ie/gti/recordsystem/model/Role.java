@@ -1,19 +1,28 @@
 package ie.gti.recordsystem.model;
 
-public class Role {
+public enum Role {
 
-    enum RoleType {
-        ADMIN(1, "admin"),
-        TEACHER(2, "teacher"),
-        STUDENT(3, "student");
+    ADMIN(1, "admin"),
+    TEACHER(2, "teacher"),
+    STUDENT(3, "student");
 
-        final long id;
-        final String name;
+//    public enum RoleType {
+//        ADMIN(1, "admin"),
+//        TEACHER(2, "teacher"),
+//        STUDENT(3, "student");
+//
+//        public final long id;
+//        public final String name;
+//
+//        RoleType(long id, String name) {
+//            this.id = id;
+//            this.name = name;
+//        }
+//    }
 
-        RoleType(long id, String name) {
-            this.id = id;
-            this.name = name;
-        }
+    public Role(long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     private long id;

@@ -41,8 +41,10 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> getUserByUsername(String username) {
         final String SQL_GET_USER_BY_NAME =
                 "SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name\n" +
-                "FROM user u, users_roles ur, role r\n" +
-                "WHERE u.id = ur.user_id and r.id=ur.role_id and u.username=?";
+                "FROM user u\n" +
+                "LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id \n" +
+                "LEFT OUTER JOIN role r ON r.id = ur.role_id\n" +
+                "WHERE u.username=?";
         return Optional.ofNullable(jdbcTemplate.query(SQL_GET_USER_BY_NAME, new ResultSetExtractor<User>() {
 
             @Override
@@ -66,8 +68,9 @@ public class UserDaoImpl implements UserDao {
     public List<User> getAllUsers() {
         final String SQL_GET_USER_BY_NAME =
                 "SELECT u.id, u.username, u.password, r.id as role_id, r.name as role_name\n" +
-                        "FROM user u, users_roles ur, role r\n" +
-                        "WHERE u.id = ur.user_id and r.id=ur.role_id";
+                        "FROM user u\n" +
+                        "LEFT OUTER JOIN users_roles ur ON u.id = ur.user_id \n" +
+                        "LEFT OUTER JOIN role r ON r.id = ur.role_id";
         return jdbcTemplate.query(SQL_GET_USER_BY_NAME, new ResultSetExtractor<List<User>>() {
 
             @Override

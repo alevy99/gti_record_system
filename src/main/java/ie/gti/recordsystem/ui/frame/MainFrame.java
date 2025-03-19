@@ -91,8 +91,8 @@ public class MainFrame extends AbstractForm {
         jButton9 = new javax.swing.JButton();
         jAdminTabPanel = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        jUsersBtn = new javax.swing.JButton();
+        jTeachersBtn = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
@@ -193,17 +193,17 @@ public class MainFrame extends AbstractForm {
 
         jButton2.setText("MODULE");
 
-        jButton3.setText("USER ADM");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jUsersBtn.setText("USERS");
+        jUsersBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jUsersBtnActionPerformed(evt);
             }
         });
 
-        jButton4.setText("TEACHER");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jTeachersBtn.setText("TEACHERS");
+        jTeachersBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jTeachersBtnActionPerformed(evt);
             }
         });
 
@@ -220,9 +220,9 @@ public class MainFrame extends AbstractForm {
             jAdminTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jAdminTabPanelLayout.createSequentialGroup()
                 .addContainerGap(75, Short.MAX_VALUE)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jUsersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTeachersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(61, 61, 61)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
@@ -235,8 +235,8 @@ public class MainFrame extends AbstractForm {
                 .addGap(96, 96, 96)
                 .addGroup(jAdminTabPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTeachersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jUsersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(420, Short.MAX_VALUE))
         );
@@ -300,14 +300,14 @@ public class MainFrame extends AbstractForm {
         loginFrame.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jTeachersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTeachersBtnActionPerformed
         teacherFrame.setVisible(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_jTeachersBtnActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jUsersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUsersBtnActionPerformed
         userFrame.setVisible(true);
         subframeOpened();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jUsersBtnActionPerformed
 
     private void subframeOpened() {
         isHiddenBehindSubframe = true;
@@ -358,8 +358,6 @@ public class MainFrame extends AbstractForm {
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
@@ -368,6 +366,8 @@ public class MainFrame extends AbstractForm {
     private javax.swing.JPanel jStudentTabPanel;
     private javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JPanel jTeacherTabPanel;
+    private javax.swing.JButton jTeachersBtn;
+    private javax.swing.JButton jUsersBtn;
     // End of variables declaration//GEN-END:variables
 
 

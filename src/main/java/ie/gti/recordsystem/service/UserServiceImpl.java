@@ -24,8 +24,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void insertUser(User user) {
-        user.setId(userDao.insertUser(user));
+    public long insertUser(User user) {
+        long id = userDao.insertUser(user);
+        user.setId(id);
         userRolesDao.insertUserRoles(user);
+        return id;
     }
 }

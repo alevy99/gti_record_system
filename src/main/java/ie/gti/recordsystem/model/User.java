@@ -56,15 +56,15 @@ public class User {
     }
 
     public boolean isAdmin() {
-        return roles.stream().anyMatch (role -> role.getName().equalsIgnoreCase(Role.RoleType.ADMIN.name));
+        return roles.stream().anyMatch (role -> Role.RoleType.ADMIN.name.equalsIgnoreCase(role.getName()));
     }
 
     public boolean isTeacher() {
-        return roles.stream().anyMatch (role -> role.getName().equalsIgnoreCase(Role.RoleType.TEACHER.name));
+        return roles.stream().anyMatch (role -> Role.RoleType.TEACHER.name.equalsIgnoreCase(role.getName()));
     }
 
     public boolean isStudent() {
-        return roles.stream().anyMatch (role -> role.getName().equalsIgnoreCase(Role.RoleType.STUDENT.name));
+        return roles.stream().anyMatch (role -> Role.RoleType.STUDENT.name.equalsIgnoreCase(role.getName()));
     }
 
 }
