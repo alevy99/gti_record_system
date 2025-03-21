@@ -56,7 +56,7 @@
                   <Component id="jScrollPane1" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="jCloseBtn" min="-2" pref="105" max="-2" attributes="0"/>
-                      <Component id="jPanel2" alignment="1" min="-2" pref="848" max="-2" attributes="0"/>
+                      <Component id="jButtonsPanel" alignment="1" min="-2" pref="848" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="45" max="32767" attributes="0"/>
@@ -71,7 +71,7 @@
               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="322" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+              <Component id="jButtonsPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
               <Component id="jCloseBtn" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="29" max="32767" attributes="0"/>
@@ -133,7 +133,7 @@
         <Property name="text" type="java.lang.String" value="USERS"/>
       </Properties>
     </Component>
-    <Container class="javax.swing.JPanel" name="jPanel2">
+    <Container class="javax.swing.JPanel" name="jButtonsPanel">
 
       <Layout>
         <DimensionLayout dim="0">
@@ -141,9 +141,9 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="jAddPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="310" max="-2" attributes="0"/>
-                  <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="302" max="-2" attributes="0"/>
+                  <Component id="jUpdatePanel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -155,7 +155,7 @@
                       <Component id="jAddPanel" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jUpdatePanel" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
@@ -228,7 +228,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel3">
+        <Container class="javax.swing.JPanel" name="jUpdatePanel">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
