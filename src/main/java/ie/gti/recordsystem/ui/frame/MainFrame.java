@@ -5,18 +5,20 @@
 package ie.gti.recordsystem.ui.frame;
 
 import ie.gti.recordsystem.model.User;
-import ie.gti.recordsystem.ui.AbstractForm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import ie.gti.recordsystem.service.ServiceManager;
+import ie.gti.recordsystem.ui.AbstractFrame;
+import ie.gti.recordsystem.ui.FrameManager;
+import ie.gti.recordsystem.util.UserUtils;
 
 import javax.swing.*;
+
+import static ie.gti.recordsystem.ui.FrameManager.FrameType.*;
 
 /**
  *
  * @author Andrei
  */
-@Component
-public class MainFrame extends AbstractForm {
+public class MainFrame extends AbstractFrame {
 
     private static final String STUDENT_TAB_TITLE = "Student";
 
@@ -28,14 +30,16 @@ public class MainFrame extends AbstractForm {
 
     private User user;
 
-    @Autowired
-    private LoginFrame loginFrame;
+//    @Autowired
+//    private LoginFrame loginFrame;
+//
+//    @Autowired
+//    private TeacherFrame teacherFrame;
+//
+//    @Autowired
+//    private UserFrame userFrame;
 
-    @Autowired
-    private TeacherFrame teacherFrame;
-    
-    @Autowired
-    private UserFrame userFrame;
+    private FrameManager frameManager;
 
     @Override
     protected int getDefaultCloseOperationValue() {
@@ -52,7 +56,7 @@ public class MainFrame extends AbstractForm {
     protected void onFormHidden() {
         super.onFormHidden();
         if (! isHiddenBehindSubframe) {
-            loginFrame.setVisible(true);
+            frameManager.showFrame(LOGIN);
         }
     }
 
@@ -60,14 +64,12 @@ public class MainFrame extends AbstractForm {
      * Creates new form MainFrame
      */
 //    @Autowired
-    public MainFrame(/*LoginFrame loginFrame, TeacherFrame teacherFrame*/) {
+    public MainFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super();
-        setLocationRelativeTo(this);
-//        this.loginFrame = loginFrame;
-//        this.teacherFrame = teacherFrame;
+        this.frameManager = frameManager;
+//        setLocationRelativeTo(this);
         initComponents();
         initForm();
-//        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -297,15 +299,15 @@ public class MainFrame extends AbstractForm {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        loginFrame.setVisible(true);
+        frameManager.showFrame(LOGIN);
     }//GEN-LAST:event_formWindowClosed
 
     private void jTeachersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTeachersBtnActionPerformed
-        teacherFrame.setVisible(true);
+        frameManager.showFrame(TEACHER);
     }//GEN-LAST:event_jTeachersBtnActionPerformed
 
     private void jUsersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUsersBtnActionPerformed
-        userFrame.setVisible(true);
+        frameManager.showFrame(USER);
         subframeOpened();
     }//GEN-LAST:event_jUsersBtnActionPerformed
 
@@ -376,15 +378,15 @@ public class MainFrame extends AbstractForm {
         jTabbedPane.remove(jTeacherTabPanel);
         jTabbedPane.remove(jStudentTabPanel);
 
-        if (user.isAdmin()) {
+        if (UserUtils.isAdmin(user)) {
             jTabbedPane.add(ADMIN_TAB_TITLE, jAdminTabPanel);
         }
 
-        if (user.isTeacher()) {
+        if (UserUtils.isTeacher(user)) {
             jTabbedPane.add(TEACHER_TAB_TITLE, jTeacherTabPanel);
         }
 
-        if (user.isStudent()) {
+        if (UserUtils.isStudent(user)) {
             jTabbedPane.add(STUDENT_TAB_TITLE, jStudentTabPanel);
         }
     }

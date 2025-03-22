@@ -1,9 +1,5 @@
 package ie.gti.recordsystem.ui.comp;
 
-import ie.gti.recordsystem.config.ApplicationConfig;
-import ie.gti.recordsystem.ui.frame.UserFrame;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.*;

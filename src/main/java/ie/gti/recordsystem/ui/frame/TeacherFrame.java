@@ -4,23 +4,28 @@
  */
 package ie.gti.recordsystem.ui.frame;
 
-import ie.gti.recordsystem.ui.AbstractForm;
-import org.springframework.stereotype.Component;
+import ie.gti.recordsystem.service.ServiceManager;
+import ie.gti.recordsystem.ui.AbstractFrame;
+import ie.gti.recordsystem.ui.FrameManager;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 
-import java.awt.BorderLayout;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import static ie.gti.recordsystem.ui.FrameManager.FrameType.MAIN;
+import static ie.gti.recordsystem.ui.FrameManager.FrameType.TEACHER;
 
 /**
  *
  * @author Andrei
  */
-@Component
-public class TeacherFrame extends AbstractForm {
+//@Component
+public class TeacherFrame extends AbstractFrame {
 
-    @Autowired
-    private MainFrame mainFrame;
+//    @Autowired
+//    private MainFrame mainFrame;
+
+    private final FrameManager frameManager;
     
     @Override
     protected int getDefaultCloseOperationValue() {
@@ -30,8 +35,9 @@ public class TeacherFrame extends AbstractForm {
     /**
      * Creates new form TeacherFrame
      */
-    public TeacherFrame() {
+    public TeacherFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super();
+        this.frameManager = frameManager;
         initComponents();
         initForm();
     }
@@ -65,7 +71,8 @@ public class TeacherFrame extends AbstractForm {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        mainFrame.setVisible(true);
+//        mainFrame.setVisible(true);
+        frameManager.showFrame(MAIN);
     }//GEN-LAST:event_formWindowClosed
 
     /**
@@ -98,8 +105,9 @@ public class TeacherFrame extends AbstractForm {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TeacherFrame().setVisible(true);
-                
+                ApplicationContext context = SpringApplication.run(UserFrame.class, args);
+                FrameManager manager = context.getBean(FrameManager.class);
+                manager.showFrame(TEACHER);
             }
         });
 

@@ -8,37 +8,39 @@ import java.awt.event.*;
 import java.util.Optional;
 import javax.swing.*;
 
-import ie.gti.recordsystem.dao.UserDao;
 import ie.gti.recordsystem.model.User;
-import ie.gti.recordsystem.ui.AbstractForm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import ie.gti.recordsystem.service.ServiceManager;
+import ie.gti.recordsystem.service.UserService;
+import ie.gti.recordsystem.ui.AbstractFrame;
+import ie.gti.recordsystem.ui.FrameManager;
+
+import static ie.gti.recordsystem.ui.FrameManager.FrameType.MAIN;
 
 /**
  *
  * @author Andrei
  */
-@Component
-public class LoginFrame extends AbstractForm {
+public class LoginFrame extends AbstractFrame {
 
-    @Autowired
-    private MainFrame mainFrame;
+//    private MainFrame mainFrame;
     
     private boolean isActivated;
 
-    @Autowired
-    private UserDao userDao;
+    private final UserService userService;
 
-    public LoginFrame(/*UserDao userDao, MainFrame mainFrame*/) {
+    private final FrameManager frameManager;
+
+    public LoginFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super();
-        setLocationRelativeTo(this);
-//        this.userDao = userDao;
-//        this.mainFrame = mainFrame;
+//        this.userService = userService;
+        this.frameManager = frameManager;
+        userService = serviceManager.getUserService();
         initComponents();
         initForm();
 //        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 //        initSpring();
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The
@@ -158,7 +160,7 @@ public class LoginFrame extends AbstractForm {
 //
 //        jPasswordTF.setText("12345");
 
-        Optional<User> user = userDao.getUserByUsername(jUsernameTF.getText());
+        Optional<User> user = userService.getUserByUsername(jUsernameTF.getText());
 
         if (user.isEmpty() || (! user.get().getPassword().equals(String.valueOf(jPasswordTF.getPassword())))) {
             JOptionPane.showMessageDialog(this, "Invalid username or password");
@@ -175,8 +177,8 @@ public class LoginFrame extends AbstractForm {
 //                mainFrame = new MainFrame();
 //            }
             // user is not empty
-            mainFrame.setUser(user.get());
-            mainFrame.setVisible(true);
+            ((MainFrame) frameManager.getFrame(MAIN)).setUser(user.get());
+            frameManager.showFrame(MAIN);
             this.setVisible(false);
 //            mainFrame.setLocationRelativeTo(this);
         }

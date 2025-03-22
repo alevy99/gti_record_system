@@ -4,22 +4,23 @@
  */
 package ie.gti.recordsystem.ui.frame;
 
-import ie.gti.recordsystem.config.ApplicationConfig;
-import ie.gti.recordsystem.dao.UserDao;
+import ie.gti.recordsystem.GtiRecordDesktopGuiApp;
 import ie.gti.recordsystem.model.Role;
 import ie.gti.recordsystem.model.User;
+import ie.gti.recordsystem.service.ServiceManager;
 import ie.gti.recordsystem.service.UserService;
-import ie.gti.recordsystem.ui.AbstractForm;
-import ie.gti.recordsystem.ui.comp.PaddedJTable;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
+import ie.gti.recordsystem.ui.AbstractFrame;
+import ie.gti.recordsystem.ui.FrameManager;
+import ie.gti.recordsystem.util.UserUtils;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,11 +28,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ie.gti.recordsystem.ui.FrameManager.FrameType.MAIN;
+import static ie.gti.recordsystem.ui.FrameManager.FrameType.USER;
+
 /**
  * @author Andrei
  */
-@Component
-public class UserFrame extends AbstractForm {
+/// Do not apply SpringBootApp, if we use 'web' profile
+@Profile("!web")
+@SpringBootApplication
+public class UserFrame extends AbstractFrame {
 
     private static final int ID_COLUMN = 0;
     private static final int USERNAME_COLUMN = 1;
@@ -40,11 +46,9 @@ public class UserFrame extends AbstractForm {
     private static final int IS_TEACHER_COLUMN = 4;
     private static final int IS_ADMIN_COLUMN = 5;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private MainFrame mainFrame;
+    private final FrameManager frameManager;
 
     private boolean isInserting = false;
 
@@ -53,8 +57,10 @@ public class UserFrame extends AbstractForm {
     /**
      * Creates new form PersonFrame
      */
-    public UserFrame() {
+    public UserFrame(FrameManager frameManager, ServiceManager serviceManager) {
         super();
+        this.frameManager = frameManager;
+        userService = serviceManager.getUserService();
         initComponents();
         initForm();
     }
@@ -110,7 +116,8 @@ public class UserFrame extends AbstractForm {
 
     protected void onFormHidden() {
         super.onFormHidden();
-        mainFrame.setVisible(true);
+//        mainFrame.setVisible(true);
+        frameManager.showFrame(MAIN);
     }
 
 
@@ -372,7 +379,7 @@ public class UserFrame extends AbstractForm {
 
             users.forEach(user -> {
                 model.addRow(new Object[]{user.getId(), user.getUsername(), user.getPassword(),
-                        user.isStudent(), user.isTeacher(), user.isAdmin(), "Delete"});
+                        UserUtils.isStudent(user), UserUtils.isTeacher(user), UserUtils.isAdmin(user), "Delete"});
             });
 
         } else {
@@ -391,7 +398,8 @@ public class UserFrame extends AbstractForm {
 
     private void jCloseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCloseBtnActionPerformed
         this.setVisible(false);
-        mainFrame.setVisible(true);
+//        mainFrame.setVisible(true);
+        frameManager.showFrame(MAIN);
     }//GEN-LAST:event_jCloseBtnActionPerformed
 
     private void jDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeleteBtnActionPerformed
@@ -546,11 +554,13 @@ public class UserFrame extends AbstractForm {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
 //                UserFrame frame = new UserFrame();
-                AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-                        ApplicationConfig.class
-                );
-                UserFrame frame = context.getBean(UserFrame.class);
-                frame.setVisible(true);
+//                AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+//                        ApplicationConfig.class
+//                );
+                ApplicationContext context = SpringApplication.run(GtiRecordDesktopGuiApp.class, args);
+//                ApplicationContext context = SpringApplication.run(UserFrame.class, args);
+                FrameManager manager = context.getBean(FrameManager.class);
+                manager.showFrame(USER);
             }
         });
     }

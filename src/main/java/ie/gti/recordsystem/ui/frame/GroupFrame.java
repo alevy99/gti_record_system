@@ -4,11 +4,20 @@
  */
 package ie.gti.recordsystem.ui.frame;
 
+import ie.gti.recordsystem.ui.AbstractFrame;
+
+import javax.swing.*;
+
 /**
  *
  * @author Andrei
  */
-public class GroupFrame extends javax.swing.JFrame {
+public class GroupFrame extends AbstractFrame {
+
+    @Override
+    protected int getDefaultCloseOperationValue() {
+        return JFrame.HIDE_ON_CLOSE;
+    }
 
     /**
      * Creates new form GroupFrame
@@ -71,7 +80,8 @@ public class GroupFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GroupFrame().setVisible(true);
+
+//                new GroupFrame().setVisible(true);
             }
         });
     }

@@ -55,18 +55,6 @@ public class User {
         return roles;
     }
 
-    public boolean isAdmin() {
-        return roles.stream().anyMatch (role -> Role.RoleType.ADMIN.name.equalsIgnoreCase(role.getName()));
-    }
-
-    public boolean isTeacher() {
-        return roles.stream().anyMatch (role -> Role.RoleType.TEACHER.name.equalsIgnoreCase(role.getName()));
-    }
-
-    public boolean isStudent() {
-        return roles.stream().anyMatch (role -> Role.RoleType.STUDENT.name.equalsIgnoreCase(role.getName()));
-    }
-
     @Override
     public String toString() {
         return "ID: " + id + ", Username: " + username;

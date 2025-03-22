@@ -13,47 +13,47 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@Configuration
-@EnableTransactionManagement
-@ComponentScan("ie.gti.recordsystem")
-@PropertySource("classpath:database.properties")
-public class ApplicationConfig {
+//@Configuration
+//@EnableTransactionManagement
+//@ComponentScan("ie.gti.recordsystem")
+//@PropertySource("classpath:database.properties")
+//public class ApplicationConfig {
 
 //    @Autowired
 //    Environment environment;
+//
+//    @Value("${url}")
+//    private String dbUrl;
+//
+//    @Value("${dbuser}")
+//    private String dbUser;
+//
+//
+//    @Value("${dbpassword}")
+//    private String dbPassword;
+//
+//    @Value("${driver}")
+//    private String dbDriver;
+//
+//
+//    @Bean
+//    public DataSource dataSource() {
+//        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+//        driverManagerDataSource.setUrl(dbUrl);
+//        driverManagerDataSource.setUsername(dbUser);
+//        driverManagerDataSource.setPassword(dbPassword);
+//        driverManagerDataSource.setDriverClassName(dbDriver);
+//        return driverManagerDataSource;
+//    }
+//
+//    @Bean
+//    public JdbcTemplate jdbcTemplate() {
+//        return new JdbcTemplate(dataSource());
+//    }
+//
+//    @Bean
+//    public PlatformTransactionManager transactionManager() {
+//        return new DataSourceTransactionManager(dataSource());
+//    }
 
-    @Value("${url}")
-    private String dbUrl;
-
-    @Value("${dbuser}")
-    private String dbUser;
-
-
-    @Value("${dbpassword}")
-    private String dbPassword;
-
-    @Value("${driver}")
-    private String dbDriver;
-
-
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-        driverManagerDataSource.setUrl(dbUrl);
-        driverManagerDataSource.setUsername(dbUser);
-        driverManagerDataSource.setPassword(dbPassword);
-        driverManagerDataSource.setDriverClassName(dbDriver);
-        return driverManagerDataSource;
-    }
-
-    @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
-    }
-
-}
+//}

@@ -5,16 +5,16 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
-public abstract class AbstractForm extends JFrame {
+public abstract class AbstractFrame extends JFrame {
 
-    private final Logger logger = LoggerFactory.getLogger(AbstractForm.class);
+    private final Logger logger = LoggerFactory.getLogger(AbstractFrame.class);
 
-    private boolean isShownOnce = false;
+    private boolean isShownOnceOrMore = false;
 
     protected abstract int getDefaultCloseOperationValue();
 
 
-    public AbstractForm() {
+    public AbstractFrame() {
         super();
 //        setLocationRelativeTo(this);
     }
@@ -29,8 +29,8 @@ public abstract class AbstractForm extends JFrame {
 
     @Override
     public void setVisible(boolean b) {
-        if (! isShownOnce) {
-            isShownOnce = true;
+        if (!isShownOnceOrMore) {
+            isShownOnceOrMore = true;
             setLocationRelativeTo(this);
             shownFirstTime();
         }
@@ -59,6 +59,8 @@ public abstract class AbstractForm extends JFrame {
             toFront();
         });
     }
+
+
 
 //    protected boolean isShownOnce() {
 //        return isShownOnce;
